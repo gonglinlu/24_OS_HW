@@ -2,8 +2,8 @@
 
 > 2021010862 龚林鹭
 
-- 环境：rCore
-- 第1题：ch2；第2-6题：ch4
+- 实验环境：rCore
+- 第2-6题：ch4
 
 #### 1. 批处理操作系统中，AppManager数据结构的组成（ch2）
 
@@ -22,7 +22,7 @@ struct AppManager {
 
 #### 2. AppManager数据结构的初始化过程（ch4）
 
-##### 1. 定义
+##### 2.1 定义
 
 ```rust
 // src/task/task.rs
@@ -42,7 +42,7 @@ struct TaskManagerInner {
 }
 ```
 
-##### 2. 初始化
+##### 2.2 初始化
 
 ```rust
 // src/task/mod.rs
@@ -93,7 +93,7 @@ pub struct TaskContext {
 2. `sp: usize`：表示任务的栈指针。栈指针指向任务当前的栈顶位置，用于管理任务的函数调用栈。它是一个无符号整数类型（`usize`）。
 3. `s: [usize; 12]`：表示任务的 s0 到 s11 寄存器的值。这些寄存器是被调用者保存的寄存器，用于保存函数调用过程中的临时变量。数组的每个元素都是一个无符号整数类型（`usize`），用于保存相应寄存器的值。
 
-#### 4. 在系统调用过程中，trapframe数据结构的**保存**过程（ch4）
+#### 4. 在系统调用过程中，trapframe数据结构的保存过程（ch4）
 
 ```assembly
 # src/trap/trap.S
@@ -139,7 +139,7 @@ __alltraps:
 5. 切换到内核空间：通过 `ld` 指令从用户栈中加载 `kernel_satp`、`kernel_sp` 和 `trap_handler` 的值，并将 `satp` 寄存器设置为 `kernel_satp` 的值，`sp` 寄存器设置为 `kernel_sp` 的值。这样做是为了将处理器从用户态切换到内核态，并设置相应的内核栈和页表。
 6. 跳转到异常处理程序：通过 `jr` 指令跳转到 `trap_handler` 寄存器中保存的异常处理程序的地址，开始执行异常处理过程。
 
-#### 5. 在系统调用返回过程中的从trapframe数据结构恢复**应用程序执行上下文**的过程（ch4）
+#### 5. 在系统调用返回过程中的从trapframe数据结构恢复应用程序执行上下文的过程（ch4）
 
 ```assembly
 # src/trap/trap.S
@@ -174,7 +174,7 @@ __restore:
 3. 计算恢复函数 `__restore` 的虚拟地址 `restore_va`。
 4. 使用汇编代码执行恢复操作，跳转到恢复函数的地址，并将参数传递给 `__restore` 函数进行恢复操作。
 
-#### 6. 系统调用执行过程中的**参数和返回值传递**过程（ch4）
+#### 6. 系统调用执行过程中的参数和返回值传递过程（ch4）
 
 ```rust
 // src/trap/mod.rs
@@ -186,5 +186,5 @@ pub fn trap_handler() -> ! {
 ```
 
 - 事先将参数放入特定的寄存器 `a0`, `a1`, `a2`中。
-- `ecall`时，触发`trap_handler()`，调用 `syscall()`，传入当前`TrapContext`的`x[]`中保存的参数
+- `ecall`时，触发`trap_handler()`，调用 `syscall()`，传入当前`TrapContext`的`x[]`中保存的参数。
 - 系统调用函数执行完毕后，`trap_handler()`将返回值保存到`TrapContext`中的通用寄存器`a[0]`中。
