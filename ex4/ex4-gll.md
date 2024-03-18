@@ -95,7 +95,7 @@ pub struct TaskContext {
 
 #### 4. 在系统调用过程中，trapframe数据结构的保存过程（ch4）
 
-```asm
+```Assembly
 # src/trap/trap.S
 __alltraps:
     csrrw sp, sscratch, sp
@@ -141,7 +141,7 @@ __alltraps:
 
 #### 5. 在系统调用返回过程中的从trapframe数据结构恢复应用程序执行上下文的过程（ch4）
 
-```asm
+```Assembly
 # src/trap/trap.S
 __restore:
     # a0: *TrapContext in user space(Constant); a1: user space token
